@@ -14,7 +14,7 @@ public partial class Player : CharacterBody2D
     //Gravidade do projeto.
     //Pegamos automaticamente a gravidade definida nas configuraçoes da Godot
     // AsSingle() converte o valor retornado para float.
-    private float gravity = ProjectSettings.GetSetting("physics/2D/default_gravity").AsSingle();
+    private float _gravity = ProjectSettings.GetSetting("physics/2D/default_gravity").AsSingle();
 
     // Método chamado automaticamente a cada frame de física.
     // Geralmente 60 vezes por segundo.
@@ -28,10 +28,42 @@ public partial class Player : CharacterBody2D
         //==============================//
         //==========Gravidade==========//
         //=============================//
-
+        
+        // Se o personagem não estiver no chão...
         if (!IsOnFloor())
         {
-        //
+            // aplicamos gravidade no eixo Y.
+            // Multiplicamos por delta para manter movimento consistente
+            // independentemente do FPS
+            velocity.Y += _gravity * (float)delta;
+        }
+
+        // ======================================================
+        // PULO
+        // ======================================================
+
+        // Se o jogador apertou o botão de pulo
+        // E o personagem está no chão...    
+        if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
+        {
+            //Aplicamos a força do pulo.
+            velocity.Y = JUMPFORCE;
+        }
+
+        // ======================================================
+        // MOVIMENTO HORIZONTAL
+        // ======================================================
+
+        // Retorna:
+        // -1 quando aperta esquerda
+        // 1 quando aperta direita 
+        // 0 quando nao aperta nada
+        float direction = Input.GetAxis("ui_left", "ui_right");
+
+        //Se existe alguma direção...
+        if (direction != 0)
+        {
+            
         }
     }
 }
