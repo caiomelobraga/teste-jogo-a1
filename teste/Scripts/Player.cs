@@ -63,7 +63,14 @@ public partial class Player : CharacterBody2D
         //Se existe alguma direção...
         if (direction != 0)
         {
-            
+            // Move o personagem
+            velocity.X = direction * SPEED;
+        }else
+        {
+            // caso contrario, desacelera suavemente até parar.
+            velocity.X = Math.MoveToward(
+                velocity.X,
+            )
         }
     }
 }
