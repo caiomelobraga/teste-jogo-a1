@@ -1,7 +1,51 @@
 [gd_scene format=3 uid="uid://b1y5lblw61op7"]
 
+[ext_resource type="Texture2D" uid="uid://bbxer1uonnfnt" path="res://Assets/Seasonal Tilesets/1 - Grassland/Terrain (16 x 16).png" id="1_eblq3"]
 [ext_resource type="Script" uid="uid://dttx4v07u0oue" path="res://Scripts/Player.cs" id="1_ebm2h"]
 [ext_resource type="Texture2D" uid="uid://c8c6mpmycechp" path="res://Assets/Sprite Pack 2/2 - Mr. Mochi/Idle (32 x 32).png" id="1_v6a87"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ae37v"]
+texture = ExtResource("1_eblq3")
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+11:1/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+11:2/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+9:3/0 = 0
+10:3/0 = 0
+11:3/0 = 0
+12:3/0 = 0
+13:3/0 = 0
+15:3/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+11:4/0 = 0
+3:5/0 = 0
+4:5/0 = 0
+5:5/0 = 0
+11:5/0 = 0
+3:6/0 = 0
+4:6/0 = 0
+5:6/0 = 0
+4:8/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_k5xvd"]
+sources/0 = SubResource("TileSetAtlasSource_ae37v")
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ebm2h"]
 
@@ -31,6 +75,9 @@ animations = [{
 size = Vector2(657, 20)
 
 [node name="Word-01" type="Node2D" unique_id=1915838837]
+
+[node name="Level" type="TileMapLayer" parent="." unique_id=980725234]
+tile_set = SubResource("TileSet_k5xvd")
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=704697386]
 position = Vector2(194, 186)
