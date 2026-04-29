@@ -1,20 +1,19 @@
 using Godot;
 using System;
-using System.Numerics;
 
 public partial class Player : CharacterBody2D
 {
     // velocidade horizontal do personagem.
     //private: acessivel somente nesta classe
-    private const float SPEED = 300F;
+    private const float SPEED = 150.0F;
     // força do pulo
     // negativo pq na godot o eixo y cresce para baixo
-    private const float JUMPFORCE = -400F;
+    private const float JUMPFORCE = -300.0F;
 
     //Gravidade do projeto.
     //Pegamos automaticamente a gravidade definida nas configuraçoes da Godot
     // AsSingle() converte o valor retornado para float.
-    private float _gravity = ProjectSettings.GetSetting("physics/2D/default_gravity").AsSingle();
+    private float _gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
 
     // Método chamado automaticamente a cada frame de física.
     // Geralmente 60 vezes por segundo.
@@ -68,9 +67,22 @@ public partial class Player : CharacterBody2D
         }else
         {
             // caso contrario, desacelera suavemente até parar.
-            velocity.X = Math.MoveToward(
-                velocity.X,
-            )
+            velocity.X = Mathf.MoveToward(
+                velocity.X, // valor atual
+                0,          // destino
+                SPEED       // velocidade da desaceleraçao 
+            );
         }
+
+        // ======================================================
+        // APLICA MOVIMENTO
+        // ======================================================
+
+        // atualiza a propriedade velocity do characterody2D
+        Velocity = velocity;
+
+        // Move o personagem usando colisao e fisica
+        MoveAndSlide();
+
     }
 }

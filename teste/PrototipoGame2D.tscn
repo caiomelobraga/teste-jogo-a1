@@ -27,6 +27,9 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ebm2h"]
+size = Vector2(657, 20)
+
 [node name="Word-01" type="Node2D" unique_id=1915838837]
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=704697386]
@@ -40,3 +43,9 @@ shape = SubResource("CapsuleShape2D_ebm2h")
 sprite_frames = SubResource("SpriteFrames_k5xvd")
 animation = &"Idle"
 frame_progress = 0.61245406
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=128995572]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=583248835]
+position = Vector2(315, 316)
+shape = SubResource("RectangleShape2D_ebm2h")
