@@ -5,10 +5,10 @@ public partial class Player : CharacterBody2D
 {
     // velocidade horizontal do personagem.
     //private: acessivel somente nesta classe
-    private const float SPEED = 150.0F;
+    private const float SPEED = 200.0F;
     // força do pulo
     // negativo pq na godot o eixo y cresce para baixo
-    private const float JUMPFORCE = -500.0F;
+    private const float JUMPFORCE = -300.0F;
 
     //Gravidade do projeto.
     //Pegamos automaticamente a gravidade definida nas configuraçoes da Godot
