@@ -3,86 +3,154 @@ using System;
 
 public partial class Player : CharacterBody2D
 {
-    // velocidade horizontal do personagem.
-    //private: acessivel somente nesta classe
-    private const float SPEED = 200.0F;
-    // força do pulo
-    // negativo pq na godot o eixo y cresce para baixo
-    private const float JUMPFORCE = -300.0F;
+    // ======================================================
+    // CONFIGURAÇÕES DO PERSONAGEM
+    // ======================================================
 
-    //Gravidade do projeto.
-    //Pegamos automaticamente a gravidade definida nas configuraçoes da Godot
-    // AsSingle() converte o valor retornado para float.
-    private float _gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
+    // Velocidade horizontal do personagem
+    private const float SPEED = 200.0f;
 
-    // Método chamado automaticamente a cada frame de física.
-    // Geralmente 60 vezes por segundo.
-    // delta = tempo desde o ultimo frame.
+    // Força do pulo (negativo pois Y cresce para baixo na Godot)
+    private const float JUMP_FORCE = -300.0f;
+
+    // Gravidade padrão do projeto (vinda das configurações da Godot)
+    private float _gravity = ProjectSettings
+        .GetSetting("physics/2d/default_gravity")
+        .AsSingle();
+
+    // ======================================================
+    // REFERÊNCIAS DE NÓS
+    // ======================================================
+
+    // Referência ao AnimatedSprite2D (responsável pelas animações)
+    private AnimatedSprite2D _sprite;
+
+    // ======================================================
+    // MÉTODOS DE INICIALIZAÇÃO
+    // ======================================================
+
+    public override void _Ready()
+    {
+        // Busca o nó AnimatedSprite2D dentro da cena
+        _sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+    }
+
+    // ======================================================
+    // LOOP PRINCIPAL DE FÍSICA
+    // ======================================================
+
     public override void _PhysicsProcess(double delta)
     {
-        // criamos uma cópia da velocidade atual.
-        // Isso facilita modificar cada eixo separadamente.
+        // Copiamos a velocidade atual do personagem
         Vector2 velocity = Velocity;
 
-        //==============================//
-        //==========Gravidade==========//
-        //=============================//
-        
-        // Se o personagem não estiver no chão...
+        // 1. Aplica gravidade
+        ApplyGravity(ref velocity, delta);
+
+        // 2. Processa pulo
+        HandleJump(ref velocity);
+
+        // 3. Processa movimento horizontal
+        float direction = GetMovementInput();
+        ApplyHorizontalMovement(ref velocity, direction);
+
+        // 4. Atualiza animação com base no movimento
+        UpdateAnimation(direction);
+
+        // 5. Aplica movimento final ao personagem
+        Velocity = velocity;
+        MoveAndSlide();
+    }
+
+    // ======================================================
+    // SISTEMA DE GRAVIDADE
+    // ======================================================
+
+    private void ApplyGravity(ref Vector2 velocity, double delta)
+    {
+        // Se NÃO estiver no chão, aplica gravidade
         if (!IsOnFloor())
         {
-            // aplicamos gravidade no eixo Y.
-            // Multiplicamos por delta para manter movimento consistente
-            // independentemente do FPS
             velocity.Y += _gravity * (float)delta;
         }
+    }
 
-        // ======================================================
-        // PULO
-        // ======================================================
+    // ======================================================
+    // SISTEMA DE PULO
+    // ======================================================
 
-        // Se o jogador apertou o botão de pulo
-        // E o personagem está no chão...    
+    private void HandleJump(ref Vector2 velocity)
+    {
+        // Se pressionou o botão de pulo E está no chão
         if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
         {
-            //Aplicamos a força do pulo.
-            velocity.Y = JUMPFORCE;
+            velocity.Y = JUMP_FORCE;
         }
+    }
 
-        // ======================================================
-        // MOVIMENTO HORIZONTAL
-        // ======================================================
+    // ======================================================
+    // INPUT DO JOGADOR
+    // ======================================================
 
+    private float GetMovementInput()
+    {
         // Retorna:
-        // -1 quando aperta esquerda
-        // 1 quando aperta direita 
-        // 0 quando nao aperta nada
-        float direction = Input.GetAxis("ui_left", "ui_right");
+        // -1 (esquerda), 1 (direita), 0 (parado)
+        return Input.GetAxis("ui_left", "ui_right");
+    }
 
-        //Se existe alguma direção...
+    // ======================================================
+    // MOVIMENTO HORIZONTAL
+    // ======================================================
+
+    private void ApplyHorizontalMovement(ref Vector2 velocity, float direction)
+    {
         if (direction != 0)
         {
-            // Move o personagem
+            // Move diretamente na direção pressionada
             velocity.X = direction * SPEED;
-        }else
+        }
+        else
         {
-            // caso contrario, desacelera suavemente até parar.
+            // Desacelera suavemente até parar
             velocity.X = Mathf.MoveToward(
                 velocity.X, // valor atual
                 0,          // destino
-                SPEED       // velocidade da desaceleraçao 
+                SPEED       // taxa de desaceleração
             );
         }
+    }
 
-        // ======================================================
-        // APLICA MOVIMENTO
-        // ======================================================
+    // ======================================================
+    // SISTEMA DE ANIMAÇÃO
+    // ======================================================
 
-        // atualiza a propriedade velocity do characterody2D
-        Velocity = velocity;
+    private void UpdateAnimation(float direction)
+    {
+        // Se o personagem está se movendo horizontalmente
+        if (direction != 0)
+        {
+            PlayAnimation("run");
 
-        // Move o personagem usando colisao e fisica
-        MoveAndSlide();
+            // Vira o sprite conforme a direção
+            _sprite.FlipH = direction < 0;
+        }
+        else
+        {
+            PlayAnimation("idle");
+        }
+    }
 
+    // ======================================================
+    // CONTROLE DE ANIMAÇÃO (EVITA REPETIÇÃO)
+    // ======================================================
+
+    private void PlayAnimation(string animationName)
+    {
+        // Só troca a animação se for diferente da atual
+        if (_sprite.Animation != animationName)
+        {
+            _sprite.Play(animationName);
+        }
     }
 }

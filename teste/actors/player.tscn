@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dttx4v07u0oue" path="res://Scripts/Player.cs" id="1_mvpqy"]
 [ext_resource type="Texture2D" uid="uid://c8c6mpmycechp" path="res://Assets/Sprite Pack 2/2 - Mr. Mochi/Idle (32 x 32).png" id="2_1yqc4"]
+[ext_resource type="Texture2D" uid="uid://d0ivrweuamx0o" path="res://Assets/Sprite Pack 2/2 - Mr. Mochi/Running (32 x 32).png" id="3_1yqc4"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ebm2h"]
 radius = 3.9999998
@@ -15,6 +16,22 @@ region = Rect2(0, 0, 32, 32)
 atlas = ExtResource("2_1yqc4")
 region = Rect2(32, 0, 32, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_esgq3"]
+atlas = ExtResource("3_1yqc4")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kjkj0"]
+atlas = ExtResource("3_1yqc4")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tue77"]
+atlas = ExtResource("3_1yqc4")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_33vod"]
+atlas = ExtResource("3_1yqc4")
+region = Rect2(96, 0, 32, 32)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_k5xvd"]
 animations = [{
 "frames": [{
@@ -25,8 +42,25 @@ animations = [{
 "texture": SubResource("AtlasTexture_ae37v")
 }],
 "loop": true,
-"name": &"Idle",
+"name": &"idle",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_esgq3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kjkj0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tue77")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_33vod")
+}],
+"loop": true,
+"name": &"run",
+"speed": 10.0
 }]
 
 [node name="Player" type="CharacterBody2D" unique_id=144933956]
@@ -39,8 +73,7 @@ shape = SubResource("CapsuleShape2D_ebm2h")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1403255096]
 position = Vector2(0, -7)
 sprite_frames = SubResource("SpriteFrames_k5xvd")
-animation = &"Idle"
-frame_progress = 0.61245406
+animation = &"idle"
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=348446686]
 zoom = Vector2(1.3, 1.3)
